@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "irb"
+require File.expand_path("#{File.dirname(__FILE__)}/../lib/tic_tac_toe.rb")
+
+board_setup = Model::BoardSetup.new(dimensions: 3)
+board_setup_presenter = Presenter::BoardSetup.new(board_setup, View::BoardSetup.new)
+board_setup_presenter.run
+
+board = board_setup.create
+board_presenter = Presenter::Board.new(board:             board,
+                                       view:              View::Board.new,
+                                       game_tree_factory: Model::GameTreeFactory.new)
+board_presenter.run
