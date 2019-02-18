@@ -1,12 +1,17 @@
 module View
   class Board
     def render(args)
+      clear_screen
       puts message(args)
       puts table(args[:tile_collection])
       select_move(args[:complete], args[:team], args[:presenter])
     end
 
     private
+
+    def clear_screen
+      system("clear") || system("cls")
+    end
 
     def message(args)
       if args[:complete]
