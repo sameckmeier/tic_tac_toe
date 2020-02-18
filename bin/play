@@ -4,12 +4,32 @@ require "bundler/setup"
 require "irb"
 require File.expand_path("#{File.dirname(__FILE__)}/../lib/tic_tac_toe.rb")
 
-board_setup = Model::BoardSetup.new(dimensions: 3)
-board_setup_presenter = Presenter::BoardSetup.new(board_setup, View::BoardSetup.new)
-board_setup_presenter.run
+board_setup = Model::BoardSetup.new(
+  dimensions: 3,
+  board_klass: Model::Board,
+  tile_collection_klass: Model::TileCollection,
+  team_collection_klass: Model::TeamCollection,
+  game_state: Model::GameState,
+  tile_klass: Model::Tile
+)
+
+teams_setup = Model::TeamsSetup.new(
+  team_klass: Model::Team,
+  piece_klass: Model::Piece,
+  move_klass: Model::Move,
+  move_strategy_klass: Model::MoveStrategy
+)
+
+board_setup_controller = Controller::BoardSetup.new(board_setup, teams_setup)
+board_setup_view = View::BoardSetup.new(board_setup_controller)
 
 board = board_setup.create
-board_presenter = Presenter::Board.new(board:             board,
-                                       view:              View::Board.new,
-                                       game_tree_factory: Model::GameTreeFactory.new)
-board_presenter.run
+board_controller = Controller::Board.new(board, Model::GameTree.new)
+board_view = View::Board.new(board_controller)
+
+board_setup_view.render
+
+while board_controller.continue?
+  system("clear") || system("cls")
+  board_view.render
+end
