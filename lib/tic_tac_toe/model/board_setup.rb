@@ -15,8 +15,8 @@ module Model
     def create_board
       tiles = create_tiles
 
-      @board_klass.new(tile_collection: @tile_collection_klass.new(tiles, dimensions),
-                       team_collection: @team_collection_klass.new(teams),
+      @board_klass.new(tile_collection: @tile_collection_klass.new(tiles, @dimensions),
+                       team_collection: @team_collection_klass.new(@teams),
                        game_state:      @game_state.new)
     end
 
