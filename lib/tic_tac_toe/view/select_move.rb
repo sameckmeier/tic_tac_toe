@@ -1,5 +1,5 @@
 module View
-  class SelectMove < View::Base
+  class SelectMove < View::Terminal
     def render
       puts "Go #{@controller.current_team.name}"
       select_move
@@ -14,9 +14,9 @@ module View
         @controller.computer_select_move(current_team)
       else
         puts "Please select a row"
-        row = gets.chomp
+        row = @terminal_util.get_input
         puts "Please select a column"
-        col = gets.chomp
+        col = @terminal_util.get_input
 
         if @controller.tile_available?(row, col)
           @controller.select_move(row, col, current_team)

@@ -4,7 +4,7 @@ require "bundler"
 
 Bundler.require(:default)
 
-Dir[File.join(__dir__, "tic_tac_toe", "model", "utility", "*.rb")].each {|file| require file }
+Dir[File.join(__dir__, "tic_tac_toe", "view", "abstract", "*.rb")].each {|file| require file }
 
 Dir[File.join(__dir__, "**", "*.rb")].each {|file| require file }
 

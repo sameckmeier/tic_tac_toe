@@ -1,5 +1,5 @@
 module View
-  class BoardSetup < View::Base
+  class BoardSetup < View::Terminal
     def render
       select_teams
     end
@@ -14,10 +14,10 @@ module View
     def select_team(team_types)
       puts "Please Select Team Type by Entering Number Next to Type"
       team_types.each { |k, v| puts "#{v}: #{k}" }
-      type = gets.chomp.to_i
+      type = @terminal_util.get_integer_input
 
       puts "Please Select Team Name"
-      name = gets.chomp
+      name = @terminal_util.get_input
 
       { type: type, name: name }
     end

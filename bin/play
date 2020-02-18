@@ -21,7 +21,7 @@ teams_setup = Model::TeamsSetup.new(
 )
 
 board_setup_controller = Controller::BoardSetup.new(board_setup, teams_setup)
-board_setup_view = View::BoardSetup.new(board_setup_controller)
+board_setup_view = View::BoardSetup.new(board_setup_controller, Utils::Terminal)
 
 board_setup_view.render
 
@@ -29,7 +29,7 @@ board = board_setup.create_board
 board_controller = Controller::Board.new(board, Model::GameTree)
 board_view = View::Board.new(board_controller, Terminal::Table)
 game_result_view = View::GameResult.new(board_controller)
-select_move_view = View::SelectMove.new(board_controller)
+select_move_view = View::SelectMove.new(board_controller, Utils::Terminal)
 
 while board_controller.continue?
   Utils::Terminal.clear_screen
