@@ -23,13 +23,20 @@ teams_setup = Model::TeamsSetup.new(
 board_setup_controller = Controller::BoardSetup.new(board_setup, teams_setup)
 board_setup_view = View::BoardSetup.new(board_setup_controller)
 
-board = board_setup.create
-board_controller = Controller::Board.new(board, Model::GameTree.new)
-board_view = View::Board.new(board_controller)
-
 board_setup_view.render
 
+board = board_setup.create_board
+board_controller = Controller::Board.new(board, Model::GameTree)
+board_view = View::Board.new(board_controller, Terminal::Table)
+game_result_view = View::GameResult.new(board_controller)
+select_move_view = View::SelectMove.new(board_controller)
+
 while board_controller.continue?
-  system("clear") || system("cls")
+  Utils::Terminal.clear_screen
   board_view.render
+  select_move_view.render
 end
+
+Utils::Terminal.clear_screen
+board_view.render
+game_result_view.render
