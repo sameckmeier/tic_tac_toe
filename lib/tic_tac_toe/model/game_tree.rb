@@ -2,11 +2,16 @@ module Model
   class GameTree
     attr_reader :previous_move, :board
 
-    def initialize(args)
-      @board = args[:board]
-      @previous_move = args[:previous_move]
-      @move_factory = args[:move_factory]
+    def initialize(board, previous_move = nil)
+      @board = board
+      @previous_move = previous_move
       @equivalent = {}
+    end
+
+    class << self
+      def generate_game_tree(board)
+        self.new(board)
+      end
     end
 
     def current_team
@@ -35,7 +40,7 @@ module Model
         unless equivalent?(tile_collection.id)
           add_equivalents(tile_collection)
           board.cycle_teams
-          game_trees << self.class.new(board: board, previous_move: move)
+          game_trees << self.class.new( board, move)
         end
 
         game_trees
