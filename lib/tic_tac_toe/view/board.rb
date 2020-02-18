@@ -1,49 +1,47 @@
 module View
-  class Board
-    def render(args)
-      clear_screen
-      puts message(args)
-      puts table(args[:tile_collection])
-      select_move(args[:complete], args[:team], args[:presenter])
+  class Board < View::Base
+    def render
+      puts message
+      puts table
+
+      return if !@controller.continue?
+
+      select_move
     end
 
     private
 
-    def clear_screen
-      system("clear") || system("cls")
-    end
-
-    def message(args)
-      if args[:complete]
-        args[:winner] ? "Team #{args[:winner].name} Won!!!" : "Draw!"
+    def message
+      if !@controller.continue?
+        @controller.winner ? "Team #{@controller.winner.name} Won!!!" : "Draw!"
       else
-        "Go #{args[:team].name}"
+        "Go #{@controller.current.name}"
       end
     end
 
-    def table(tile_collection)
+    def table
       headings = generate_headings(tile_collection.dimensions)
       rows = format_rows(tile_collection.rows)
 
       Terminal::Table.new(headings: headings, rows: rows, style: { all_separators: true })
     end
 
-    def select_move(complete, team, presenter)
-      return if complete
+    def select_move
+      current_team = @controller.current_team
 
-      if team.computer?
-        presenter.computer_select_move(team)
+      if current_team.computer?
+        @controller.computer_select_move(current_team)
       else
         puts "Please select a row"
         row = gets.chomp
         puts "Please select a column"
         col = gets.chomp
 
-        if presenter.tile_available?(row, col)
-          presenter.select_move_input(row, col, team)
+        if @controller.tile_available?(row, col)
+          @controller.select_move_input(row, col, team)
         else
           puts "Invalid Selection: Tile has already been selected"
-          select_move(complete, team, presenter)
+          select_move
         end
       end
     end
