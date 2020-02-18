@@ -1,47 +1,30 @@
 module Model
   class BoardSetup
-    HUMAN_TYPE = 1
-    COMPUTER_TYPE = 2
-
-    attr_reader :team_types
+    attr_accessor :teams
 
     def initialize(args)
-      @args = args || {}
-      @team_types = { "Player": HUMAN_TYPE, "Computer": COMPUTER_TYPE }
+      @board_klass = args[:board_klass]
+      @tile_collection_klass = args[:tile_collection_klass]
+      @team_collection_klass = args[:team_collection_klass]
+      @game_state = args[:game_state]
+      @tile_klass = args[:tile_klass]
+      @dimensions = args[:dimensions]
+      @teams = []
     end
 
-    def create
-      dimensions = @args[:dimensions]
-      tiles = create_tiles(dimensions)
-      teams = create_teams
+    def create_board
+      tiles = create_tiles
 
-      Model::Board.new(tile_collection: Model::TileCollection.new(tiles, dimensions),
-                       team_collection: Model::TeamCollection.new(teams),
-                       game_state:      Model::GameState.new)
-    end
-
-    def update(args)
-      @args.merge!(args)
+      @board_klass.new(tile_collection: @tile_collection_klass.new(tiles, dimensions),
+                       team_collection: @team_collection_klass.new(teams),
+                       game_state:      @game_state.new)
     end
 
     private
 
-    def create_tiles(dimensions)
-      cnt = dimensions ** 2
-      (1..cnt).map { |i| Model::Tile.new }
-    end
-
-    def create_teams
-      @args[:teams].map { |args| create_team(args) }
-    end
-
-    def create_team(args)
-      name = args[:name]
-      piece = Model::Piece.new(name, Model::MoveFactory.new)
-      move_strategy = args[:type] == COMPUTER_TYPE ? Model::MoveStrategy.new : nil
-      Model::Team.new(name:          name,
-                      move_strategy: move_strategy,
-                      pieces:        [piece])
+    def create_tiles
+      cnt = @dimensions ** 2
+      (1..cnt).map { |i| @tile_klass.new }
     end
   end
 end

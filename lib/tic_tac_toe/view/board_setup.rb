@@ -1,14 +1,14 @@
 module View
-  class BoardSetup
-    def render(args)
-      select_teams(args[:presenter], args[:team_types])
+  class BoardSetup < View::Base
+    def render
+      select_teams
     end
 
     private
 
-    def select_teams(presenter, team_types)
-      teams = (1..2).map { |_| select_team(team_types) }
-      presenter.set_teams(teams)
+    def select_teams
+      teams = (1..2).map { |_| select_team(@controller.team_types) }
+      @controller.set_teams(teams)
     end
 
     def select_team(team_types)
