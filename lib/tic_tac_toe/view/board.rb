@@ -1,50 +1,20 @@
 module View
   class Board < View::Base
+    def initialize(controller, table_klass)
+      super(controller)
+      @table_klass = table_klass
+    end
+
     def render
-      puts message
+      tile_collection = @controller.tile_collection
+      headings = generate_headings(tile_collection.dimensions)
+      rows = format_rows(tile_collection.rows)
+      table = @table_klass.new(headings: headings, rows: rows, style: { all_separators: true })
+
       puts table
-
-      return if !@controller.continue?
-
-      select_move
     end
 
     private
-
-    def message
-      if !@controller.continue?
-        @controller.winner ? "Team #{@controller.winner.name} Won!!!" : "Draw!"
-      else
-        "Go #{@controller.current.name}"
-      end
-    end
-
-    def table
-      headings = generate_headings(tile_collection.dimensions)
-      rows = format_rows(tile_collection.rows)
-
-      Terminal::Table.new(headings: headings, rows: rows, style: { all_separators: true })
-    end
-
-    def select_move
-      current_team = @controller.current_team
-
-      if current_team.computer?
-        @controller.computer_select_move(current_team)
-      else
-        puts "Please select a row"
-        row = gets.chomp
-        puts "Please select a column"
-        col = gets.chomp
-
-        if @controller.tile_available?(row, col)
-          @controller.select_move_input(row, col, team)
-        else
-          puts "Invalid Selection: Tile has already been selected"
-          select_move
-        end
-      end
-    end
 
     def generate_indexes(dimensions)
       range = (1..dimensions)
