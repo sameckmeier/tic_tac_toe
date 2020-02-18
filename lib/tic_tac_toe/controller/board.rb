@@ -26,7 +26,7 @@ module Controller
       @board.tile_collection
     end
 
-    def winner
+    def winning_team
       @board.winner
     end
 
@@ -34,8 +34,16 @@ module Controller
       @board.current_team
     end
 
+    def winner?
+      winning_team
+    end
+
     def continue?
-      !@board.complete?
+      !(draw? || winner?)
+    end
+
+    def draw?
+      @board.complete? && !winner?
     end
   end
 end
