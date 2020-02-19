@@ -4,39 +4,43 @@ require "bundler/setup"
 require "irb"
 require File.expand_path("#{File.dirname(__FILE__)}/../lib/tic_tac_toe.rb")
 
-board_setup = Model::BoardSetup.new(
-  dimensions: 3,
-  board_klass: Model::Board,
-  tile_collection_klass: Model::TileCollection,
-  team_collection_klass: Model::TeamCollection,
-  game_state: Model::GameState,
-  tile_klass: Model::Tile
-)
+begin
+  board_setup = Model::BoardSetup.new(
+    dimensions: 3,
+    board_klass: Model::Board,
+    tile_collection_klass: Model::TileCollection,
+    team_collection_klass: Model::TeamCollection,
+    game_state: Model::GameState,
+    tile_klass: Model::Tile
+  )
 
-teams_setup = Model::TeamsSetup.new(
-  team_klass: Model::Team,
-  piece_klass: Model::Piece,
-  move_klass: Model::Move,
-  move_strategy_klass: Model::MoveStrategy
-)
+  teams_setup = Model::TeamsSetup.new(
+    team_klass: Model::Team,
+    piece_klass: Model::Piece,
+    move_klass: Model::Move,
+    move_strategy_klass: Model::MoveStrategy
+  )
 
-board_setup_controller = Controller::BoardSetup.new(board_setup, teams_setup)
-board_setup_view = View::BoardSetup.new(board_setup_controller, Utils::Terminal)
+  select_team_presenter = Presenter::SelectTeam.new(board_setup, teams_setup)
+  select_team_view = View::SelectTeam.new(select_team_presenter, Utils::Terminal)
 
-board_setup_view.render
+  select_team_view.render
 
-board = board_setup.create_board
-board_controller = Controller::Board.new(board, Model::GameTree)
-board_view = View::Board.new(board_controller, Terminal::Table)
-game_result_view = View::GameResult.new(board_controller)
-select_move_view = View::SelectMove.new(board_controller, Utils::Terminal)
+  board = board_setup.create_board
+  board_presenter = Presenter::Board.new(board, Model::GameTree)
+  board_view = View::Board.new(board_presenter, Terminal::Table)
+  game_result_view = View::GameResult.new(board_presenter)
+  select_move_view = View::SelectMove.new(board_presenter, Utils::Terminal)
 
-while board_controller.continue?
+  while board_presenter.continue?
+    Utils::Terminal.clear_screen
+    board_view.render
+    select_move_view.render
+  end
+
   Utils::Terminal.clear_screen
   board_view.render
-  select_move_view.render
+  game_result_view.render
+rescue => e
+  puts "Seems that something went wrong :( Sorry about that"
 end
-
-Utils::Terminal.clear_screen
-board_view.render
-game_result_view.render

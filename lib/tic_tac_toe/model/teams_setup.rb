@@ -17,6 +17,10 @@ module Model
       teams_args.map { |args| create_team(args) }
     end
 
+    def valid_team_type?(type)
+      type == HUMAN_TYPE || type == COMPUTER_TYPE
+    end
+
     private
 
     def create_team(args)
