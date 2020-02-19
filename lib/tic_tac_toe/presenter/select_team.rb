@@ -1,8 +1,12 @@
-module Controller
-  class BoardSetup
+module Presenter
+  class SelectTeam
     def initialize(board_setup, team_setup)
       @board_setup = board_setup
       @team_setup = team_setup
+    end
+
+    def invalid_team_selection?(type)
+      !@team_setup.valid_team_type?(type)
     end
 
     def team_types

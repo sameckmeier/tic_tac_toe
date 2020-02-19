@@ -1,4 +1,4 @@
-module Controller
+module Presenter
   class Board
     def initialize(board, game_tree_klass)
       @board = board
@@ -18,8 +18,8 @@ module Controller
       select_move(tile.row, tile.col, team)
     end
 
-    def tile_available?(row, col)
-      @board.tile_available?(row, col)
+    def invalid_tile_selection?(row, col)
+      row > @board.dimensions || col > @board.dimensions || !@board.tile_available?(row, col)
     end
 
     def tile_collection
