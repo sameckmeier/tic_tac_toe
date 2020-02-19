@@ -1,10 +1,10 @@
 module View
   class GameResult < View::Base
     def render
-      if @controller.draw?
+      if @presenter.draw?
         puts "Draw!"
-      elsif @controller.winner?
-        winning_team = @controller.winning_team
+      elsif @presenter.winner?
+        winning_team = @presenter.winning_team
         puts "Team #{winning_team.name} Won!!!"
       end
     end

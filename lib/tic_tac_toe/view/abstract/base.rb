@@ -1,7 +1,7 @@
 module View
   class Base
-    def initialize(controller)
-      @controller = controller
+    def initialize(presenter)
+      @presenter = presenter
     end
 
     def render

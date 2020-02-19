@@ -1,12 +1,12 @@
 module View
   class Board < View::Base
-    def initialize(controller, table_klass)
-      super(controller)
+    def initialize(presenter, table_klass)
+      super(presenter)
       @table_klass = table_klass
     end
 
     def render
-      tile_collection = @controller.tile_collection
+      tile_collection = @presenter.tile_collection
       headings = generate_headings(tile_collection.dimensions)
       rows = format_rows(tile_collection.rows)
       table = @table_klass.new(headings: headings, rows: rows, style: { all_separators: true })
