@@ -1,55 +1,49 @@
 require "spec_helper"
 
 describe Model::GameState do
+  let(:dimensions) { 3 }
+  let(:range) { (1..dimensions) }
+  let!(:tile_collection) { double(:tile_collection, dimensions: dimensions) }
+  let!(:board) { double(:board, tile_collection: tile_collection) }
+  let!(:empty_tile) { double(:tile, team: nil) }
+  let!(:team) { double(:team, name: "test") }
+  let!(:opposing_team) { double(:team, name: "another test") }
+  let!(:tile) { double(:tile, team: team) }
+  let!(:opposing_tile) { double(:tile, team: opposing_team) }
+  let!(:game_state) { build(:game_state) }
+
+  before { allow(tile_collection).to receive(:find_tile).and_return(empty_tile) }
+
   describe :winner do
-    let(:game_state) { build(:game_state) }
-    let(:board) { build(:board, game_state: game_state) }
-    let(:dimensions) { board.tile_collection.dimensions }
-    let(:range) { (1..dimensions) }
-
     context "when there is a winning team" do
-      let(:team) { board.current_team }
-      let(:piece) { team.pieces[0] }
-
       context "diagonal" do
         it "returns winning team" do
-          range.each { |i| board.set_piece(i, i, piece) }
+          range.each { |i| allow(tile_collection).to receive(:find_tile).with(i, i).and_return(tile) }
           expect(game_state.winner(board).name).to eq team.name
         end
       end
 
       context "row" do
         it "returns winning team" do
-          range.each { |i| board.set_piece(1, i, piece) }
+          range.each { |i| allow(tile_collection).to receive(:find_tile).with(1, i).and_return(tile) }
           expect(game_state.winner(board).name).to eq team.name
         end
       end
 
       context "col" do
         it "returns winning team" do
-          range.each { |i| board.set_piece(i, 1, piece) }
+          range.each { |i| allow(tile_collection).to receive(:find_tile).with(i, 1).and_return(tile) }
           expect(game_state.winner(board).name).to eq team.name
         end
       end
     end
 
     context "when there is not winning team" do
-      let(:team) { build(:team) }
-      let(:opposing_team) { build(:team) }
-      let(:team_collection) { build(:team_collection, teams: [team, opposing_team]) }
-      let(:piece) { team.pieces[0] }
-      let(:opposing_team_piece) { opposing_team.pieces[0] }
-      let(:board) { build(:board, game_state: game_state, team_collection: team_collection) }
-
-      it "returns nil" do
-        expect(board.winner).to eq nil
-      end
-
       context "diagonal" do
         it "returns nil" do
           range.each do |i|
-            p = i.odd? ? piece : opposing_team_piece
-            board.set_piece(i, i, p)
+            t = i.odd? ? tile : opposing_tile
+            allow(tile_collection).to receive(:find_tile).with(i, i).and_return(t)
           end
 
           expect(game_state.winner(board)).to eq nil
@@ -59,8 +53,8 @@ describe Model::GameState do
       context "row" do
         it "returns nil" do
           range.each do |i|
-            p = i.odd? ? piece : opposing_team_piece
-            board.set_piece(1, i, p)
+            t = i.odd? ? tile : opposing_tile
+            allow(tile_collection).to receive(:find_tile).with(1, i).and_return(t)
           end
 
           expect(game_state.winner(board)).to eq nil
@@ -70,8 +64,8 @@ describe Model::GameState do
       context "col" do
         it "returns nil" do
           range.each do |i|
-            p = i.odd? ? piece : opposing_team_piece
-            board.set_piece(i, 1, p)
+            t = i.odd? ? tile : opposing_tile
+            allow(tile_collection).to receive(:find_tile).with(i, 1).and_return(t)
           end
 
           expect(game_state.winner(board)).to eq nil
@@ -81,54 +75,35 @@ describe Model::GameState do
   end
 
   describe :rating do
-    let(:game_state) { build(:game_state) }
-    let(:board) { build(:board, game_state: game_state) }
-    let(:dimensions) { board.tile_collection.dimensions }
-    let(:range) { (1..dimensions) }
-
     context "when there is a winning team" do
-      let(:team) { board.current_team }
-      let(:piece) { team.pieces[0] }
-
       context "diagonal" do
         it "returns winning team" do
-          range.each { |i| board.set_piece(i, i, piece) }
+          range.each { |i| allow(tile_collection).to receive(:find_tile).with(i, i).and_return(tile) }
           expect(game_state.rating(board, team)).to eq 1
         end
       end
 
       context "row" do
         it "returns winning team" do
-          range.each { |i| board.set_piece(1, i, piece) }
+          range.each { |i| allow(tile_collection).to receive(:find_tile).with(1, i).and_return(tile) }
           expect(game_state.rating(board, team)).to eq 1
         end
       end
 
       context "col" do
         it "returns winning team" do
-          range.each { |i| board.set_piece(i, 1, piece) }
+          range.each { |i| allow(tile_collection).to receive(:find_tile).with(i, 1).and_return(tile) }
           expect(game_state.rating(board, team)).to eq 1
         end
       end
     end
 
     context "when there is not winning team" do
-      let(:team) { build(:team) }
-      let(:opposing_team) { build(:team) }
-      let(:team_collection) { build(:team_collection, teams: [team, opposing_team]) }
-      let(:piece) { team.pieces[0] }
-      let(:opposing_team_piece) { opposing_team.pieces[0] }
-      let(:board) { build(:board, game_state: game_state, team_collection: team_collection) }
-
-      it "returns nil" do
-        expect(game_state.rating(board, team)).to eq 0
-      end
-
       context "diagonal" do
         it "returns nil" do
           range.each do |i|
-            p = i.odd? ? piece : opposing_team_piece
-            board.set_piece(i, i, p)
+            t = i.odd? ? tile : opposing_tile
+            allow(tile_collection).to receive(:find_tile).with(i, i).and_return(t)
           end
 
           expect(game_state.rating(board, team)).to eq 0
@@ -138,8 +113,8 @@ describe Model::GameState do
       context "row" do
         it "returns nil" do
           range.each do |i|
-            p = i.odd? ? piece : opposing_team_piece
-            board.set_piece(1, i, p)
+            t = i.odd? ? tile : opposing_tile
+            allow(tile_collection).to receive(:find_tile).with(1, i).and_return(t)
           end
 
           expect(game_state.rating(board, team)).to eq 0
@@ -149,8 +124,8 @@ describe Model::GameState do
       context "col" do
         it "returns nil" do
           range.each do |i|
-            p = i.odd? ? piece : opposing_team_piece
-            board.set_piece(i, 1, p)
+            t = i.odd? ? tile : opposing_tile
+            allow(tile_collection).to receive(:find_tile).with(i, 1).and_return(t)
           end
 
           expect(game_state.rating(board, team)).to eq 0
@@ -159,37 +134,24 @@ describe Model::GameState do
     end
 
     context "when there is a losing team" do
-      let(:game_state) { build(:game_state) }
-      let(:board) { build(:board, game_state: game_state) }
-      let(:dimensions) { board.tile_collection.dimensions }
-      let(:range) { (1..dimensions) }
-      let!(:team) { board.current_team }
-      let!(:piece) { team.pieces[0] }
-
       context "diagonal" do
         it "returns winning team" do
-          board.cycle_teams
-          next_team = board.current_team
-          range.each { |i| board.set_piece(i, i, piece) }
-          expect(game_state.rating(board, next_team)).to eq -1
+          range.each { |i| allow(tile_collection).to receive(:find_tile).with(i, i).and_return(opposing_tile) }
+          expect(game_state.rating(board, team)).to eq -1
         end
       end
 
       context "row" do
         it "returns winning team" do
-          board.cycle_teams
-          next_team = board.current_team
-          range.each { |i| board.set_piece(1, i, piece) }
-          expect(game_state.rating(board, next_team)).to eq -1
+          range.each { |i|  allow(tile_collection).to receive(:find_tile).with(1, i).and_return(opposing_tile) }
+          expect(game_state.rating(board, team)).to eq -1
         end
       end
 
       context "col" do
         it "returns winning team" do
-          board.cycle_teams
-          next_team = board.current_team
-          range.each { |i| board.set_piece(i, 1, piece) }
-          expect(game_state.rating(board, next_team)).to eq -1
+          range.each { |i| allow(tile_collection).to receive(:find_tile).with(i, 1).and_return(opposing_tile) }
+          expect(game_state.rating(board, team)).to eq -1
         end
       end
     end
