@@ -14,11 +14,15 @@ module Model
 
     def set_piece(row, col, piece)
       tile = @tile_collection.find_tile(row, col)
+      
       tile.piece = piece
+      
+      tile
     end
 
     def tile_available?(row, col)
       tile = @tile_collection.find_tile(row, col)
+
       tile.piece.nil?
     end
 
@@ -31,7 +35,7 @@ module Model
     end
 
     def complete?
-      available_tiles.count == 0 || winner
+      available_tiles.count == 0 || !winner.nil?
     end
 
     def current_team
@@ -48,7 +52,7 @@ module Model
 
     def rating(team)
       rating = @game_state.rating(self, team)
-
+      
       if rating < 0
        rating -= available_tiles.count
      elsif rating > 0

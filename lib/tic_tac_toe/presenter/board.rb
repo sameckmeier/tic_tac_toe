@@ -7,6 +7,7 @@ module Presenter
 
     def select_move(row, col, team)
       @board.set_piece(row, col, team.selected_piece)
+
       @board.cycle_teams
     end
 
@@ -15,6 +16,7 @@ module Presenter
       game_tree = @game_tree_klass.generate_game_tree(@board)
       move = move_strategy.select_move(game_tree)
       tile = move.tile
+
       select_move(tile.row, tile.col, team)
     end
 
@@ -35,7 +37,7 @@ module Presenter
     end
 
     def winner?
-      winning_team
+      winning_team.present?
     end
 
     def continue?

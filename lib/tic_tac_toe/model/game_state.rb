@@ -2,11 +2,12 @@ module Model
   class GameState
     def winner(board)
       tile_collection = board.tile_collection
+
       rows(tile_collection) || cols(tile_collection) || diags(tile_collection)
     end
 
     def rating(board, team)
-      winner = board.winner
+      winner = winner(board)
 
       return 0 unless winner
 
@@ -15,16 +16,14 @@ module Model
 
     private
 
-    def select_current_team(current_team, row_i, col_i, tile_collection)
-      tile_team = team(row_i, col_i, tile_collection)
-
-      return tile_team if
-        ((tile_team && current_team) && tile_team.name == current_team.name)
+    def current_team?(current_team, team)
+      (team && current_team) && team.name == current_team.name
     end
 
     def team(row_i, col_i, tile_collection)
       tile = tile_collection.find_tile(row_i, col_i)
-      tile&.team
+
+      tile.team
     end
 
     def rows(tile_collection)
@@ -34,8 +33,12 @@ module Model
         current_team = team(row_i, 1, tile_collection)
 
         (2..dims).each do |col_i|
-          current_team = select_current_team(current_team, row_i, col_i, tile_collection)
-          break if current_team.nil?
+          team = team(row_i, col_i, tile_collection)
+
+          if !current_team?(current_team, team)
+            current_team = nil
+            break 
+          end
         end
 
         return current_team if current_team
@@ -51,8 +54,12 @@ module Model
         current_team = team(1, col_i, tile_collection)
 
         (2..dims).each do |row_i|
-          current_team = select_current_team(current_team, row_i, col_i, tile_collection)
-          break if current_team.nil?
+          team = team(row_i, col_i, tile_collection)
+
+          if !current_team?(current_team, team)
+            current_team = nil
+            break 
+          end
         end
 
         return current_team if current_team
@@ -66,11 +73,15 @@ module Model
       dims = tile_collection.dimensions
 
       (2..dims).each do |i|
-        current_team = select_current_team(current_team, i, i, tile_collection)
-        break if current_team.nil?
+        team = team(i, i, tile_collection)
+
+        if !current_team?(current_team, team)
+          current_team = nil
+          break 
+        end
       end
 
-      current_team if current_team
+      current_team
     end
 
     def right_diag(tile_collection)
@@ -80,16 +91,23 @@ module Model
 
       (2..dims).each do |row_i|
         col_i -= 1
-        current_team = select_current_team(current_team, row_i, col_i, tile_collection)
-        break if current_team.nil?
+
+        team = team(row_i, col_i, tile_collection)
+
+        if !current_team?(current_team, team)
+          current_team = nil
+          break 
+        end
       end
 
-      current_team if current_team
+      current_team
     end
 
     def diags(tile_collection)
       team = left_diag(tile_collection)
+
       return team if team
+
       right_diag(tile_collection)
     end
   end

@@ -9,8 +9,8 @@ module Model
     end
 
     class << self
-      def generate_game_tree(board)
-        self.new(board)
+      def generate_game_tree(board, previous_move = nil)
+        self.new(board, previous_move)
       end
     end
 
@@ -30,17 +30,21 @@ module Model
       return @next_game_trees unless @next_game_trees.nil?
 
       moves = @board.available_moves
+
       @next_game_trees = moves.each_with_object([]) do |move, game_trees|
         tile = move.tile
         board = @board.clone
 
         board.set_piece(tile.row, tile.col, move.piece)
+
         tile_collection = board.tile_collection
 
         unless equivalent?(tile_collection.id)
           add_equivalents(tile_collection)
+
           board.cycle_teams
-          game_trees << self.class.new( board, move)
+
+          game_trees << self.class.generate_game_tree(board, move)
         end
 
         game_trees
@@ -60,6 +64,7 @@ module Model
 
       i = 3
       rotated = tile_collection.rotate
+
       while i > 0
         @equivalent[rotated.id] = true
         @equivalent[rotated.flip.id] = true

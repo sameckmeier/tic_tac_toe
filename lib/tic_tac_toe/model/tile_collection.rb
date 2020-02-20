@@ -3,7 +3,10 @@ module Model
     attr_reader :dimensions
 
     def initialize(tiles, dimensions)
+      raise ArgumentError, "empty tiles array" if tiles.length == 0
+
       @dimensions = dimensions
+
       @tiles = tiles.each_with_index do |tile, i|
         tile.col = col_index(i)
         tile.row = row_index(i)
@@ -29,7 +32,9 @@ module Model
 
       while i < @tiles.count
         j = i + 3
+
         @rows << @tiles[i...j]
+        
         i = j
       end
 
@@ -84,6 +89,7 @@ module Model
 
     def clone(tiles = nil)
       tiles ||= clone_tiles
+
       self.class.new(tiles, dimensions)
     end
 
@@ -120,6 +126,7 @@ module Model
     def index(row, col)
       r = row - 1
       c = col - 1
+
       dimensions * r + c
     end
 
