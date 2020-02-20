@@ -27,6 +27,7 @@ module Model
       name = args[:name]
       piece = @piece_klass.new(name, @move_klass)
       move_strategy = args[:type] == COMPUTER_TYPE ? @move_strategy_klass.new : nil
+
       @team_klass.new(name:          name,
                       move_strategy: move_strategy,
                       pieces:        [piece])

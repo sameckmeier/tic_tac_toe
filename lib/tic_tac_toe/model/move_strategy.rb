@@ -5,6 +5,7 @@ module Model
     def select_move(game_tree)
       @team = game_tree.current_team
       evaluated_game_tree = min_max(game_tree, 9, true, -Float::INFINITY, Float::INFINITY)
+
       evaluated_game_tree.game_tree.previous_move
     end
 
@@ -24,8 +25,10 @@ module Model
 
     def max(game_trees, cut_off, alpha, beta)
       curr_eval_game_tree = nil
+
       game_trees.each do |game_tree|
         eval_game_tree = min_max(game_tree, cut_off, false, alpha, beta)
+
         eval_game_tree.game_tree = game_tree
 
         alpha = eval_game_tree.rating if eval_game_tree.rating > alpha
@@ -41,8 +44,10 @@ module Model
 
     def min(game_trees, cut_off, alpha, beta)
       curr_eval_game_tree = nil
+
       game_trees.each do |game_tree|
         eval_game_tree = min_max(game_tree, cut_off, true, alpha, beta)
+
         eval_game_tree.game_tree = game_tree
 
         beta = eval_game_tree.rating if eval_game_tree.rating < beta

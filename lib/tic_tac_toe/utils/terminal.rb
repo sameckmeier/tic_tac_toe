@@ -7,6 +7,7 @@ module Utils
 
       def get_input
         val = gets.chomp
+
         val
       end
   

@@ -12,11 +12,13 @@ module Model
 
     def next
       @rest << @head
+
       @head = @rest.shift
     end
 
     def clone
       teams = [@head].concat(@rest)
+
       self.class.new(teams)
     end
   end

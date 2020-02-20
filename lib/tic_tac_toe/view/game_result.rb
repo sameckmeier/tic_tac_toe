@@ -5,6 +5,7 @@ module View
         puts "Draw!"
       elsif @presenter.winner?
         winning_team = @presenter.winning_team
+
         puts "Team #{winning_team.name} Won!!!"
       end
     end

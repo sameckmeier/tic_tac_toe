@@ -13,14 +13,12 @@ begin
     game_state: Model::GameState,
     tile_klass: Model::Tile
   )
-
   teams_setup = Model::TeamsSetup.new(
     team_klass: Model::Team,
     piece_klass: Model::Piece,
     move_klass: Model::Move,
     move_strategy_klass: Model::MoveStrategy
   )
-
   select_team_presenter = Presenter::SelectTeam.new(board_setup, teams_setup)
   select_team_view = View::SelectTeam.new(select_team_presenter, Utils::Terminal)
 
@@ -34,12 +32,16 @@ begin
 
   while board_presenter.continue?
     Utils::Terminal.clear_screen
+    
     board_view.render
+    
     select_move_view.render
   end
 
   Utils::Terminal.clear_screen
+  
   board_view.render
+  
   game_result_view.render
 rescue => e
   puts "Seems that something went wrong :( Sorry about that"

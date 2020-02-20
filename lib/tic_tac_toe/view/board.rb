@@ -2,6 +2,7 @@ module View
   class Board < View::Base
     def initialize(presenter, table_klass)
       super(presenter)
+
       @table_klass = table_klass
     end
 
@@ -18,6 +19,7 @@ module View
 
     def generate_indexes(dimensions)
       range = (1..dimensions)
+
       range.each_with_object([""]) { |i, indexes| indexes << i }
     end
 
@@ -28,7 +30,9 @@ module View
     def format_rows(rows)
       rows.each_with_object([]).with_index do |(row, arr), i|
         formatted = format_row(row)
+
         formatted.unshift(i + 1)
+
         arr << formatted
       end
     end
@@ -36,6 +40,7 @@ module View
     def format_row(row)
       formatted = row.map do |tile|
         piece = tile.piece
+
         piece.nil? ? "" : piece.name
       end
 
