@@ -1,12 +1,46 @@
 require "spec_helper"
 
 describe Model::GameTree do
+  describe :complete? do
+    let!(:board) { double(:board) }
+    let!(:game_tree) { build(:game_tree, board: board) }
+
+    context "when board is complete" do
+      it "returns true" do
+        allow(board).to receive(:complete?) { true }
+        expect(game_tree.complete?).to eq(true)
+      end
+    end
+
+    context "when there are no more game trees" do
+      let(:next_game_trees) { double(:next_game_trees, count: 0) }
+
+      it "returns true" do
+        allow(board).to receive(:complete?) { false }
+        allow(game_tree).to receive(:next_game_trees) { next_game_trees }
+        expect(game_tree.complete?).to eq(true)
+      end
+    end
+
+    context "when game_tree is not complete" do
+      let(:next_game_trees) { double(:next_game_trees, count: 1) }
+
+      it "returns false" do
+        allow(board).to receive(:complete?) { false }
+        allow(game_tree).to receive(:next_game_trees) { next_game_trees }
+        expect(game_tree.complete?).to eq(false)
+      end
+    end
+  end
+
   describe :next_game_trees do
     let(:game_tree) { build(:game_tree) }
 
-    it "returns a game_tree for each available tile" do
-      next_game_trees = game_tree.next_game_trees
-      expect(next_game_trees.count).to eq(3)
+    context "when there are available tiles" do
+      it "returns a game_tree for each available tile" do
+        next_game_trees = game_tree.next_game_trees
+        expect(next_game_trees.count).to eq(3)
+      end
     end
 
     context "when there are no available tiles" do
