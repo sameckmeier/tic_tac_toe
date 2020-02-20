@@ -1,12 +1,20 @@
 require "spec_helper"
 
 describe Model::TileCollection do
-  let(:tile_collection) {}
+  let!(:tile_collection) { build(:tile_collection) }
+
+  describe :initialize do
+    context "tiles is an empty array" do
+      it "raise an ArguementError" do
+        expect { build(:tile_collection, tiles: []) }.to raise_error(ArgumentError)
+      end
+    end
+  end
 
   describe :available_tiles do
-    context "all tiles available" do
-      let(:tile_collection) { build(:tile_collection) }
+    let!(:piece) { build(:piece) }
 
+    context "all tiles available" do
       it "returns all of them" do
         expect(tile_collection.available_tiles.count).to eq(9)
         expect(tile_collection.available_tiles?).to eq(true)
@@ -14,9 +22,6 @@ describe Model::TileCollection do
     end
 
     context "there are available tiles" do
-      let(:tile_collection) { build(:tile_collection) }
-      let(:piece) { build(:piece) }
-
       it "returns only available tiles" do
         tile = tile_collection.find_tile(1,1)
         tile.piece = piece
@@ -26,9 +31,6 @@ describe Model::TileCollection do
     end
 
     context "there are not available tiles" do
-      let(:tile_collection) { build(:tile_collection) }
-      let(:piece) { build(:piece) }
-
       it "returns zero tiles" do
         dimensions = tile_collection.dimensions
 
@@ -47,8 +49,6 @@ describe Model::TileCollection do
 
   describe :find_tile do
     context "valid row and col" do
-      let(:tile_collection) { build(:tile_collection) }
-
       it "returns tile" do
         tile = tile_collection.find_tile(2, 2)
         expect(tile.row).to eq(2)
@@ -57,8 +57,6 @@ describe Model::TileCollection do
     end
 
     context "invalid row and col" do
-      let(:tile_collection) { build(:tile_collection) }
-
       it "returns nil" do
         tile = tile_collection.find_tile(4, 4)
         expect(tile).to eq(nil)
@@ -67,8 +65,6 @@ describe Model::TileCollection do
   end
 
   describe :rows do
-    let(:tile_collection) { build(:tile_collection) }
-
     it "returns array of arrays" do
       tile_collection.rows.each_with_index do |row, i|
         row.each_with_index do |tile, j|
@@ -80,8 +76,6 @@ describe Model::TileCollection do
   end
 
   describe :rotate do
-    let(:tile_collection) { build(:tile_collection) }
-
     it "rows become cols" do
       tile_collection.each do |tile|
         piece = build(:piece)
@@ -106,8 +100,6 @@ describe Model::TileCollection do
   end
 
   describe :flip do
-    let(:tile_collection) { build(:tile_collection) }
-
     it "top row becomes bottom row" do
       tile_collection.each do |tile|
         piece = build(:piece)
