@@ -1,20 +1,20 @@
 module Presenter
   class SelectTeam
-    def initialize(board_setup, team_setup)
+    def initialize(board_setup, teams_setup)
       @board_setup = board_setup
-      @team_setup = team_setup
+      @teams_setup = teams_setup
     end
 
     def invalid_team_selection?(type)
-      !@team_setup.valid_team_type?(type)
+      !@teams_setup.valid_team_type?(type)
     end
 
     def team_types
-      @team_setup.team_types
+      @teams_setup.team_types
     end
 
     def set_teams(teams_args)
-      teams = @team_setup.create_teams(teams_args)
+      teams = @teams_setup.create_teams(teams_args)
       @board_setup.teams = teams
     end
   end
