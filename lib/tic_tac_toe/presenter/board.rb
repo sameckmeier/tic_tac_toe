@@ -37,7 +37,7 @@ module Presenter
     end
 
     def winner?
-      winning_team.present?
+      !winning_team.nil?
     end
 
     def continue?
