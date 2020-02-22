@@ -1,3 +1,21 @@
+# This class uses the MinMax algorithm with alpha/beta pruning
+# This algorithim reflects the process of a player selecting moves
+# That maximize their chances of winning, while another player
+# Selects moves to minimize the other player's chances of winning.
+# MinMax traverses a GameTree in a DFS manner and at each level promotes
+# The highest or lowest GameTree leaf rating, relative to adjacent GameTrees,
+# Depending on whether MinMax is executing in a maximizing or minimizing context.
+# Alpha/beta pruning optimizes this algorithm by preventing redundant branch traversals.
+# Once beta is <= to alpha at any level, MinMax will stop traversing adjacent GameTrees
+# And promote the most optimial GameTree at that level.
+# Since GameTree#next_game_trees is implemented optimally by filtering out equivalent GameTrees, it
+# Improves the performance of MinMax.
+# An additional optimization would be to sort GameTrees by their ratings in ascending order.
+# This would allow MinMax to establish the final beta GameTree rating much quicker, and prune more branches
+# Due to the ascending ordering of the GameTrees.
+# MinMax's worst case runtime is O(n!) 
+# For more details: https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-4-alpha-beta-pruning/
+
 module Model
   class MoveStrategy
     EvaluatedBoard = Struct.new(:game_tree, :rating)

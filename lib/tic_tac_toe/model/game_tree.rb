@@ -1,3 +1,5 @@
+# GameTree is an n-ary tree and produces its children dynamically.
+
 module Model
   class GameTree
     attr_reader :previous_move, :board
@@ -26,6 +28,8 @@ module Model
       @board.rating(team)
     end
 
+    # Produces children based on the number of unique tile collection orientations.
+    # For more info, check out Model::TileCollection.
     def next_game_trees
       return @next_game_trees unless @next_game_trees.nil?
 
@@ -60,17 +64,7 @@ module Model
     end
 
     def add_equivalents(tile_collection)
-      @equivalent[tile_collection.flip.id] = true
-
-      i = 3
-      rotated = tile_collection.rotate
-
-      while i > 0
-        @equivalent[rotated.id] = true
-        @equivalent[rotated.flip.id] = true
-        rotated = rotated.rotate
-        i -= 1
-      end
+      tile_collection.equivalents.each { |tc| @equivalent[tc.id] = true }
     end
   end
 end
