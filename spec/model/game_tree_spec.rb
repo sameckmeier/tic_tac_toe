@@ -34,31 +34,32 @@ describe Model::GameTree do
   end
 
   describe :next_game_trees do
-    let(:game_tree) { build(:game_tree) }
+    context "when there are available moves" do
+      let(:tile) { double(:tile, row: 1, col: 1) }
+      let(:piece) { double(:piece) }
+      let(:moves) { [double(:move, tile: tile, piece: piece)] }
+      let(:tile_collection) { double(:tile_collection, id: 1) }
+      let(:board) { double(:board, tile_collection: tile_collection) }
+      let(:game_tree) { build(:game_tree, board: board) }
 
-    context "when there are available tiles" do
       it "returns a game_tree for each available tile" do
-        next_game_trees = game_tree.next_game_trees
-        expect(next_game_trees.count).to eq(3)
+        allow(board).to receive(:available_moves) { moves }
+        allow(board).to receive(:clone) { board }
+        allow(board).to receive(:set_piece)
+        allow(board).to receive(:cycle_teams)
+        allow(tile_collection).to receive(:equivalents) { [] }
+
+        expect(game_tree.next_game_trees.count).to eq(1)
       end
     end
 
-    context "when there are no available tiles" do
-      let(:team_collection) { build(:team_collection) }
-      let(:team) { team_collection.current }
-      let(:piece) { team.pieces[0] }
-      let(:tile_collection) { build(:tile_collection) }
-      let(:dimensions) { tile_collection.dimensions }
-      let(:board) { build(:board, team_collection: team_collection, tile_collection: tile_collection) }
+    context "when there are no available moves" do
+      let(:moves) { [] }
+      let(:board) { double(:board) }
       let(:game_tree) { build(:game_tree, board: board) }
 
       it "returns an empty array" do
-        (1..dimensions).each do |row_i|
-          (1..dimensions).each do |col_i|
-            board.set_piece(row_i, col_i, piece)
-          end
-        end
-
+        allow(board).to receive(:available_moves) { moves }
         expect(game_tree.next_game_trees.count).to eq(0)
       end
     end
