@@ -11,35 +11,59 @@ describe Model::TileCollection do
     end
   end
 
-  describe :available_tiles do
-    let!(:piece) { build(:piece) }
+  describe :equivalent do
+    it "returns equivalent tile_collections" do
+      expect(tile_collection.equivalents.count).to eq(8)
+    end
+  end
 
+  describe :available_tiles do
     context "all tiles available" do
+      let(:tile) { double(:tile) }
+
       it "returns all of them" do
-        expect(tile_collection.available_tiles.count).to eq(9)
+        allow(tile).to receive(:row=)
+        allow(tile).to receive(:col=)
+        allow(tile).to receive(:available?) { true }
+
+        tile_collection = build(:tile_collection, tiles: [tile], dimensions: 1)
+
+        expect(tile_collection.available_tiles.count).to eq(1)
         expect(tile_collection.available_tiles?).to eq(true)
       end
     end
 
     context "there are available tiles" do
+      let(:tiles) do 
+        4.times.each_with_object([]) do |i, arr|
+          arr << double(:tile, id: i)
+          arr
+        end
+      end
+
       it "returns only available tiles" do
-        tile = tile_collection.find_tile(1,1)
-        tile.piece = piece
-        expect(tile_collection.available_tiles.count).to eq(8)
+        tiles.each do |tile|
+          allow(tile).to receive(:row=)
+          allow(tile).to receive(:col=)
+          allow(tile).to receive(:available?) { tile.id.odd? }
+        end
+        
+        tile_collection = build(:tile_collection, tiles: tiles, dimensions: 2)
+
+        expect(tile_collection.available_tiles.count).to eq(2)
         expect(tile_collection.available_tiles?).to eq(true)
       end
     end
 
-    context "there are not available tiles" do
-      it "returns zero tiles" do
-        dimensions = tile_collection.dimensions
+    context "there are no available tiles" do
+      let(:tile) { double(:tile) }
 
-        (1..dimensions).each do |row|
-          (1..dimensions).each do |col|
-            tile = tile_collection.find_tile(row, col)
-            tile.piece = piece
-          end
-        end
+      it "returns zero tiles" do
+        allow(tile).to receive(:row=)
+        allow(tile).to receive(:col=)
+        allow(tile).to receive(:available?) { false }
+
+        tile_collection = build(:tile_collection, tiles: [tile], dimensions: 1)
 
         expect(tile_collection.available_tiles.count).to eq(0)
         expect(tile_collection.available_tiles?).to eq(false)
@@ -49,16 +73,32 @@ describe Model::TileCollection do
 
   describe :find_tile do
     context "valid row and col" do
+      let(:tile) { double(:tile, row: 1, col: 1) }
+
       it "returns tile" do
-        tile = tile_collection.find_tile(2, 2)
-        expect(tile.row).to eq(2)
-        expect(tile.col).to eq(2)
+        allow(tile).to receive(:row=)
+        allow(tile).to receive(:col=)
+
+        tile_collection = build(:tile_collection, tiles: [tile], dimensions: 1)
+        tile = tile_collection.find_tile(1, 1)
+
+        expect(tile.row).to eq(1)
+        expect(tile.col).to eq(1)
       end
     end
 
     context "invalid row and col" do
+      let(:tile) { double(:tile, row: 1, col: 1) }
+
       it "returns nil" do
+        allow(tile).to receive(:row=)
+        allow(tile).to receive(:col=)
+        allow(tile).to receive(:row)
+        allow(tile).to receive(:col)
+
+        tile_collection = build(:tile_collection, tiles: [tile], dimensions: 1)
         tile = tile_collection.find_tile(4, 4)
+
         expect(tile).to eq(nil)
       end
     end
@@ -71,50 +111,6 @@ describe Model::TileCollection do
           expect(tile.row).to eq(i + 1)
           expect(tile.col).to eq(j + 1)
         end
-      end
-    end
-  end
-
-  describe :rotate do
-    it "rows become cols" do
-      tile_collection.each do |tile|
-        piece = build(:piece)
-        tile.piece = piece
-      end
-
-      rotated = tile_collection.rotate
-      dimensions = tile_collection.dimensions
-      col_i = dimensions
-
-      (1..dimensions).each do |row|
-        (1..dimensions).each do |col|
-          rotated_tile = rotated.find_tile(col, col_i)
-          tile = tile_collection.find_tile(row, col)
-
-          expect(rotated_tile.piece.name).to eq(tile.piece.name)
-        end
-
-        col_i -= 1
-      end
-    end
-  end
-
-  describe :flip do
-    it "top row becomes bottom row" do
-      tile_collection.each do |tile|
-        piece = build(:piece)
-        tile.piece = piece
-      end
-
-      dimensions = tile_collection.dimensions
-      flipped = tile_collection.flip
-      top_row_i = 1
-      bottom_row_i = dimensions
-
-      (1..dimensions).each do |col_i|
-        flipped_tile = flipped.find_tile(bottom_row_i, col_i)
-        tile = tile_collection.find_tile(top_row_i, col_i)
-        expect(flipped_tile.piece.name).to eq(tile.piece.name)
       end
     end
   end
