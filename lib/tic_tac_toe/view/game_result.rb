@@ -1,12 +1,16 @@
 module View
   class GameResult < View::Base
-    def render
-      if @presenter.draw?
-        puts "Draw!"
-      elsif @presenter.winner?
-        winning_team = @presenter.winning_team
+    def initialize(board_presenter)
+      @board_presenter = board_presenter
+    end
 
-        puts "Team #{winning_team.name} Won!!!"
+    def render
+      if @board_presenter.draw?
+        display_msg("Draw!")
+      elsif @board_presenter.winner?
+        winning_team = @board_presenter.winning_team
+
+        display_msg("Team #{winning_team.name} Won!!!")
       end
     end
   end
