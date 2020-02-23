@@ -8,7 +8,7 @@ describe View::GameResult do
     context "when it's a draw" do
       it "renders draw" do
         allow(board_presenter).to receive(:draw?) { true }
-        expect(game_result_view).to receive(:display_msg).with("Draw!")
+        expect(game_result_view).to receive(:display_msg).with(View::GameResult::DRAW_MESSAGE)
 
         game_result_view.render
       end

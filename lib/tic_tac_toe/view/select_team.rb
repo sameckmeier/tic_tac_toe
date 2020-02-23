@@ -1,5 +1,8 @@
 module View
   class SelectTeam < View::Base
+    SELECT_TEAM_TYPE_MESSAGE = "Please Select Team Type by Entering Number Next to Type"
+    SELECT_TEAM_NAME_MESSAGE = "Please Select Team Name"
+
     def initialize(select_team_presenter, terminal_util)
       @select_team_presenter = select_team_presenter
       @terminal_util = terminal_util
@@ -18,7 +21,7 @@ module View
     end
 
     def select_team(team_types)
-      display_msg("Please Select Team Type by Entering Number Next to Type")
+      display_msg(SELECT_TEAM_TYPE_MESSAGE)
 
       team_types.each { |k, v| display_msg("#{v}: #{k}") }
 
@@ -26,7 +29,7 @@ module View
 
       raise InvalidSelection, "Invalid Team Selection :(" if @select_team_presenter.invalid_team_selection?(type)
 
-      display_msg("Please Select Team Name")
+      display_msg(SELECT_TEAM_NAME_MESSAGE)
 
       name = @terminal_util.get_input
 

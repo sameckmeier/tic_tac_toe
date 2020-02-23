@@ -1,5 +1,8 @@
 module View
   class SelectMove < View::Base
+    SELECT_ROW_MESSAGE = "Please select a row"
+    SELECT_COL_MESSAGE = "Please select a col"
+
     def initialize(board_presenter, terminal_util)
       @board_presenter = board_presenter
       @terminal_util = terminal_util
@@ -19,11 +22,11 @@ module View
       if current_team.computer?
         @board_presenter.computer_select_move(current_team)
       else
-        display_msg("Please select a row")
+        display_msg(SELECT_ROW_MESSAGE)
 
         row = @terminal_util.get_integer_input
 
-        display_msg("Please select a column")
+        display_msg(SELECT_COL_MESSAGE)
         
         col = @terminal_util.get_integer_input
 
