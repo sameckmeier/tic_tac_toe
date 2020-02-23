@@ -22,7 +22,13 @@ begin
   select_team_presenter = Presenter::SelectTeam.new(board_setup, teams_setup)
   select_team_view = View::SelectTeam.new(select_team_presenter, Utils::Terminal)
 
-  select_team_view.render
+  begin
+    select_team_view.render
+  rescue InvalidSelection => e
+    puts e.message
+    puts "Please Try Again :)"
+    retry
+  end
 
   board = board_setup.create_board
   board_presenter = Presenter::Board.new(board, Model::GameTree)
@@ -35,7 +41,13 @@ begin
     
     board_view.render
     
-    select_move_view.render
+    begin
+      select_move_view.render
+    rescue InvalidSelection => e
+      puts e.message
+      puts "Please Try Again :)"
+      retry
+    end
   end
 
   Utils::Terminal.clear_screen
