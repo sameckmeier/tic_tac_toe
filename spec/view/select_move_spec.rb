@@ -33,10 +33,10 @@ describe View::SelectMove do
         it "renders select move input" do
           allow(current_team).to receive(:computer?) { false }
           allow(select_move_view).to receive(:display_msg)
-          allow(terminal_util).to receive(:get_integer_input)
+          allow(terminal_util).to receive(:get_integer_input) { 1 }
           allow(board_presenter).to receive(:invalid_tile_selection?) { false }
 
-          expect(board_presenter).to receive(:select_move)#.with(1, 1, current_team)
+          expect(board_presenter).to receive(:select_move).with(1, 1, current_team)
 
           select_move_view.render
         end

@@ -1,5 +1,10 @@
 module View
-  class SelectTeam < View::Terminal
+  class SelectTeam < View::Base
+    def initialize(select_team_presenter, terminal_util)
+      @select_team_presenter = select_team_presenter
+      @terminal_util = terminal_util
+    end
+
     def render
       select_teams
     end
@@ -7,28 +12,25 @@ module View
     private
 
     def select_teams
-      teams = (1..2).map { |_| select_team(@presenter.team_types) }
+      teams = (1..2).map { |_| select_team(@select_team_presenter.team_types) }
 
-      @presenter.set_teams(teams)
+      @select_team_presenter.set_teams(teams)
     end
 
     def select_team(team_types)
-      puts "Please Select Team Type by Entering Number Next to Type"
+      display_msg("Please Select Team Type by Entering Number Next to Type")
 
-      team_types.each { |k, v| puts "#{v}: #{k}" }
+      team_types.each { |k, v| display_msg("#{v}: #{k}") }
 
       type = @terminal_util.get_integer_input
 
-      raise InvalidSelection, "Invalid Team Selection :(" if @presenter.invalid_team_selection?(type)
+      raise InvalidSelection, "Invalid Team Selection :(" if @select_team_presenter.invalid_team_selection?(type)
 
-      puts "Please Select Team Name"
+      display_msg("Please Select Team Name")
 
       name = @terminal_util.get_input
 
       { type: type, name: name }
-    rescue InvalidSelection => e
-      puts e.message
-      retry
     end
   end
 end
