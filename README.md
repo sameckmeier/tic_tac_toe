@@ -11,3 +11,6 @@ There are two ways to play this game:
 
 If you decide to download this as a gem, make sure that you have RubyGems installed by running `gem --version` in your terminal.
 If it isn't installed, refer to https://github.com/rubygems/rubygems.
+
+## Notes
+If you intend to 'require' this gem, you will need to use the name 'tic_tac_toe'.
