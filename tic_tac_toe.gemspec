@@ -26,11 +26,12 @@ Gem::Specification.new do |spec|
     f.match(%r{^(test|spec|features)/})
   end
   spec.bindir        = "bin"
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.executables   = ["play_tic_tac_toe"]
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", ">= 12.3.3"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "terminal-table", "~> 1.8"
+  spec.add_development_dependency "factory_bot", "~> 5.1.1"
+  spec.add_runtime_dependency "terminal-table", "~> 1.8"
 end

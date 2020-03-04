@@ -1,7 +1,0 @@
-#!/usr/bin/env ruby
-
-require "bundler/setup"
-require "irb"
-require File.expand_path("#{File.dirname(__FILE__)}/../lib/tic_tac_toe.rb")
-
-IRB.start(__FILE__)
