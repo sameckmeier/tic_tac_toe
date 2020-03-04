@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "tic_tac_toe"
+require "factory_bot"
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = ".rspec_status"
