@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require "bundler/setup"
-require "irb"
+require 'bundler/setup'
+require 'irb'
 require File.expand_path("#{File.dirname(__FILE__)}/../lib/tic_tac_toe.rb")
 
 begin
@@ -26,7 +26,7 @@ begin
     select_team_view.render
   rescue InvalidSelection => e
     puts e.message
-    puts "Please Try Again :)"
+    puts 'Please Try Again :)'
     retry
   end
 
@@ -38,23 +38,23 @@ begin
 
   while board_presenter.continue?
     Utils::Terminal.clear_screen
-    
+
     board_view.render
-    
+
     begin
       select_move_view.render
     rescue InvalidSelection => e
       puts e.message
-      puts "Please Try Again :)"
+      puts 'Please Try Again :)'
       retry
     end
   end
 
   Utils::Terminal.clear_screen
-  
+
   board_view.render
-  
+
   game_result_view.render
-rescue => e
-  puts "Seems that something went wrong :( Sorry about that"
+rescue StandardError
+  puts 'Seems that something went wrong :( Sorry about that'
 end

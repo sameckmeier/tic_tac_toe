@@ -1,7 +1,7 @@
 module View
   class SelectTeam < View::Base
-    SELECT_TEAM_TYPE_MESSAGE = "Please Select Team Type by Entering Number Next to Type"
-    SELECT_TEAM_NAME_MESSAGE = "Please Select Team Name"
+    SELECT_TEAM_TYPE_MESSAGE = 'Please Select Team Type by Entering Number Next to Type'.freeze
+    SELECT_TEAM_NAME_MESSAGE = 'Please Select Team Name'.freeze
 
     def initialize(select_team_presenter, terminal_util)
       @select_team_presenter = select_team_presenter
@@ -27,7 +27,7 @@ module View
 
       type = @terminal_util.get_integer_input
 
-      raise InvalidSelection, "Invalid Team Selection :(" if @select_team_presenter.invalid_team_selection?(type)
+      raise InvalidSelection, 'Invalid Team Selection :(' if @select_team_presenter.invalid_team_selection?(type)
 
       display_msg(SELECT_TEAM_NAME_MESSAGE)
 

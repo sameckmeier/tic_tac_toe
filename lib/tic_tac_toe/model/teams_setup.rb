@@ -2,6 +2,7 @@ module Model
   class TeamsSetup
     HUMAN_TYPE = 1
     COMPUTER_TYPE = 2
+    TEAM_TYPES = [HUMAN_TYPE, COMPUTER_TYPE].freeze
 
     attr_reader :team_types
 
@@ -18,7 +19,7 @@ module Model
     end
 
     def valid_team_type?(type)
-      type == HUMAN_TYPE || type == COMPUTER_TYPE
+      TEAM_TYPES.include?(type)
     end
 
     private
@@ -28,9 +29,9 @@ module Model
       piece = @piece_klass.new(name, @move_klass)
       move_strategy = args[:type] == COMPUTER_TYPE ? @move_strategy_klass.new : nil
 
-      @team_klass.new(name:          name,
+      @team_klass.new(name: name,
                       move_strategy: move_strategy,
-                      pieces:        [piece])
+                      pieces: [piece])
     end
   end
 end

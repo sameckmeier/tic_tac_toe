@@ -1,10 +1,11 @@
+# rubocop:disable Metrics/ClassLength
 module Model
   class TileCollection
     attr_reader :dimensions
 
     def initialize(tiles, dimensions)
-      raise ArgumentError, "empty tiles array" if tiles.length == 0
-      raise ArgumentError, "dimensions do not match tiles length" if tiles.length != dimensions ** 2
+      raise ArgumentError, 'empty tiles array' if tiles.empty?
+      raise ArgumentError, 'dimensions do not match tiles length' if tiles.length != dimensions**2
 
       @dimensions = dimensions
 
@@ -15,7 +16,7 @@ module Model
     end
 
     def id
-      @tiles.each_with_object("") do |tile, str|
+      @tiles.each_with_object('') do |tile, str|
         str << tile.piece_name
         str
       end
@@ -35,7 +36,7 @@ module Model
         j = i + 3
 
         @rows << @tiles[i...j]
-        
+
         i = j
       end
 
@@ -47,7 +48,7 @@ module Model
     end
 
     def available_tiles?
-      available_tiles.count > 0
+      available_tiles.count.positive?
     end
 
     def find_tile(row, col)
@@ -61,7 +62,7 @@ module Model
       i = 4
       next_tc = self
 
-      while i > 0
+      while i.positive?
         rotated = next_tc.rotate
         next_tile_collections << rotated
         next_tile_collections << rotated.flip
@@ -152,12 +153,13 @@ module Model
       dimensions * r + c
     end
 
-    def row_index(i)
-      (i / dimensions) + 1
+    def row_index(index)
+      (index / dimensions) + 1
     end
 
-    def col_index(i)
-      (i % dimensions) + 1
+    def col_index(index)
+      (index % dimensions) + 1
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

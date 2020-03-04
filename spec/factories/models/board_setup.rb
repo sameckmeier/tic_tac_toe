@@ -8,7 +8,7 @@ FactoryBot.define do
     dimensions { 1 }
 
     skip_create
-    initialize_with do 
+    initialize_with do
       new(
         board_klass: board_klass,
         tile_collection_klass: tile_collection_klass,

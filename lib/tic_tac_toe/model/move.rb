@@ -11,9 +11,9 @@ module Model
       def generate_moves(piece, board)
         board.available_tiles.map { |tile| generate_move(tile, piece) }
       end
-  
+
       def generate_move(tile, piece)
-        self.new(tile, piece)
+        new(tile, piece)
       end
     end
   end

@@ -1,6 +1,6 @@
 module View
   class GameResult < View::Base
-    DRAW_MESSAGE = "Draw!"
+    DRAW_MESSAGE = 'Draw!'.freeze
 
     def initialize(board_presenter)
       @board_presenter = board_presenter

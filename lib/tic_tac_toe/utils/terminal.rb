@@ -2,7 +2,7 @@ module Utils
   class Terminal
     class << self
       def clear_screen
-        system("clear") || system("cls")
+        system('clear') || system('cls')
       end
 
       def get_input
@@ -10,7 +10,7 @@ module Utils
 
         val
       end
-  
+
       def get_integer_input
         get_input.to_i
       end

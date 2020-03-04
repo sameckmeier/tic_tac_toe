@@ -12,7 +12,7 @@ module Model
 
     class << self
       def generate_game_tree(board, previous_move = nil)
-        self.new(board, previous_move)
+        new(board, previous_move)
       end
     end
 
@@ -21,7 +21,7 @@ module Model
     end
 
     def complete?
-      @board.complete? || next_game_trees.count == 0
+      @board.complete? || next_game_trees.count.zero?
     end
 
     def rating(team)
@@ -35,29 +35,31 @@ module Model
 
       moves = @board.available_moves
 
-      @next_game_trees = moves.each_with_object([]) do |move, game_trees|
-        tile = move.tile
-        board = @board.clone
-
-        board.set_piece(tile.row, tile.col, move.piece)
-
-        tile_collection = board.tile_collection
-
-        unless equivalent?(tile_collection.id)
-          add_equivalents(tile_collection)
-
-          board.cycle_teams
-
-          game_trees << self.class.generate_game_tree(board, move)
-        end
-
-        game_trees
-      end
+      @next_game_trees = moves.each_with_object([]) { |move, game_trees| add_game_trees(game_trees, move) }
 
       @next_game_trees
     end
 
     private
+
+    def add_game_trees(game_trees, move)
+      tile = move.tile
+      board = @board.clone
+
+      board.set_piece(tile.row, tile.col, move.piece)
+
+      tile_collection = board.tile_collection
+
+      unless equivalent?(tile_collection.id)
+        add_equivalents(tile_collection)
+
+        board.cycle_teams
+
+        game_trees << self.class.generate_game_tree(board, move)
+      end
+
+      game_trees
+    end
 
     def equivalent?(tile_collection_id)
       @equivalent[tile_collection_id]

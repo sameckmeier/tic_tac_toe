@@ -14,9 +14,9 @@ module Model
 
     def set_piece(row, col, piece)
       tile = @tile_collection.find_tile(row, col)
-      
+
       tile.piece = piece
-      
+
       tile
     end
 
@@ -35,7 +35,7 @@ module Model
     end
 
     def complete?
-      available_tiles.count == 0 || !winner.nil?
+      available_tiles.count.zero? || !winner.nil?
     end
 
     def current_team
@@ -52,12 +52,12 @@ module Model
 
     def rating(team)
       rating = @game_state.rating(self, team)
-      
-      if rating < 0
-       rating -= available_tiles.count
-     elsif rating > 0
-       rating += available_tiles.count
-     end
+
+      if rating.negative?
+        rating -= available_tiles.count
+      elsif rating.positive?
+        rating += available_tiles.count
+      end
 
       rating
     end
@@ -65,7 +65,7 @@ module Model
     def clone
       self.class.new(tile_collection: @tile_collection.clone,
                      team_collection: @team_collection.clone,
-                     game_state:      @game_state.clone)
+                     game_state: @game_state.clone)
     end
   end
 end

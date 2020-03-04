@@ -3,7 +3,7 @@ module Model
     attr_reader :name, :move_strategy, :pieces
 
     def initialize(args)
-      raise ArgumentError, "empty pieces array" if args[:pieces].length == 0
+      raise ArgumentError, 'empty pieces array' if args[:pieces].empty?
 
       @name = args[:name]
       @move_strategy = args[:move_strategy]

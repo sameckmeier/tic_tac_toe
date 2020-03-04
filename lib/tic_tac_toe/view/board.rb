@@ -19,7 +19,7 @@ module View
     def generate_indexes(dimensions)
       range = (1..dimensions)
 
-      range.each_with_object([""]) { |i, indexes| indexes << i }
+      range.each_with_object(['']) { |i, indexes| indexes << i }
     end
 
     def generate_headings(dimensions)
@@ -40,7 +40,7 @@ module View
       formatted = row.map do |tile|
         piece = tile.piece
 
-        piece.nil? ? "" : piece.name
+        piece.nil? ? '' : piece.name
       end
 
       formatted

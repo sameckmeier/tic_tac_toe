@@ -11,7 +11,7 @@ module Model
     end
 
     def piece_name
-      piece ? piece.name : "-"
+      piece ? piece.name : '-'
     end
   end
 end

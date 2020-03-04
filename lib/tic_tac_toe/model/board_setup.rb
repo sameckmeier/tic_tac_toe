@@ -17,14 +17,14 @@ module Model
 
       @board_klass.new(tile_collection: @tile_collection_klass.new(tiles, @dimensions),
                        team_collection: @team_collection_klass.new(@teams),
-                       game_state:      @game_state.new)
+                       game_state: @game_state.new)
     end
 
     private
 
     def create_tiles
-      cnt = @dimensions ** 2
-      (1..cnt).map { |i| @tile_klass.new }
+      cnt = @dimensions**2
+      (1..cnt).map { |_i| @tile_klass.new }
     end
   end
 end

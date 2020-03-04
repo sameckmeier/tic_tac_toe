@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe View::Board do
   let(:tile_collection) { double(:tile_collection, dimensions: 1, rows: []) }
@@ -7,8 +7,8 @@ describe View::Board do
   let(:table) { double(:table) }
   let(:board_view) { build(:board_view, board_presenter: board_presenter, table_klass: table_klass) }
 
-  describe :render do    
-    it "renders board" do
+  describe :render do
+    it 'renders board' do
       allow(board_presenter).to receive(:tile_collection) { tile_collection }
       allow(table_klass).to receive(:new) { table }
       expect(board_view).to receive(:generate_headings).with(tile_collection.dimensions)

@@ -13,7 +13,7 @@
 # An additional optimization would be to sort GameTrees by their ratings in ascending order.
 # This would allow MinMax to establish the final beta GameTree rating much quicker, and prune more branches
 # Due to the ascending ordering of the GameTrees.
-# MinMax's worst case runtime is O(n!) 
+# MinMax's worst case runtime is O(n!)
 # For more details: https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-4-alpha-beta-pruning/
 
 module Model
@@ -30,7 +30,7 @@ module Model
     private
 
     def min_max(game_tree, cut_off, maximizing, alpha, beta)
-      return evaluated_game_tree(game_tree) if cut_off == 0 || game_tree.complete?
+      return evaluated_game_tree(game_tree) if cut_off.zero? || game_tree.complete?
 
       cut_off -= 1
 

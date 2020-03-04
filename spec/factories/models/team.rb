@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :team, class: Model::Team do
-    name { "Test #{rand(10000)}" }
+    name { "Test #{rand(10_000)}" }
     pieces { create_list(:piece, 1) }
 
     skip_create

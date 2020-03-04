@@ -35,9 +35,9 @@ module Model
         (2..dims).each do |col_i|
           team = team(row_i, col_i, tile_collection)
 
-          if !current_team?(current_team, team)
+          unless current_team?(current_team, team)
             current_team = nil
-            break 
+            break
           end
         end
 
@@ -56,9 +56,9 @@ module Model
         (2..dims).each do |row_i|
           team = team(row_i, col_i, tile_collection)
 
-          if !current_team?(current_team, team)
+          unless current_team?(current_team, team)
             current_team = nil
-            break 
+            break
           end
         end
 
@@ -75,9 +75,9 @@ module Model
       (2..dims).each do |i|
         team = team(i, i, tile_collection)
 
-        if !current_team?(current_team, team)
+        unless current_team?(current_team, team)
           current_team = nil
-          break 
+          break
         end
       end
 
@@ -94,9 +94,9 @@ module Model
 
         team = team(row_i, col_i, tile_collection)
 
-        if !current_team?(current_team, team)
+        unless current_team?(current_team, team)
           current_team = nil
-          break 
+          break
         end
       end
 
